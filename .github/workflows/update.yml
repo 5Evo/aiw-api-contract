@@ -1,0 +1,22 @@
+name: Update API contract
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Раз в день
+  workflow_dispatch:
+
+jobs:
+  update-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout API contract repo
+        uses: actions/checkout@v3
+      - name: Update OpenAPI contract
+        run: |
+          curl http://backend-service-url/openapi.json -o api.json
+          curl http://backend-service-url/openapi.yaml -o api.yaml
+      - name: Commit changes
+        run: |
+          git add api.json api.yaml
+          git commit -m "Auto-update API contract" || echo "No changes"
+          git push origin main || echo "No changes to push"
