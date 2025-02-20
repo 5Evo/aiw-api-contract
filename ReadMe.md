@@ -81,5 +81,4 @@ AIW-API-CONTRACTS/
 
 ## Лицензия
 
-Этот проект распространяется под лицензией MIT. Подробности см. в файле `LICENSE`.
-
+Copyright (c) [2025] [aiWorkers]. All rights reserved.
