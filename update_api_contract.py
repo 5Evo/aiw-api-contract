@@ -2,19 +2,13 @@ import json
 import yaml
 import requests
 import os
-import subprocess
 
 # URL FastAPI сервиса (замени при необходимости)
 API_URL = "http://127.0.0.1:8000/openapi.json"
 
-# Путь к файлам
+# Пути к файлам
 JSON_FILE = "api.json"
 YAML_FILE = "api.yaml"
-
-# Репозиторий API-контракта
-GIT_REPO_URL = "git@github.com:5Evo/aiw-api-contract.git"
-GIT_DIR = "api-contract"
-
 
 def download_openapi():
     """Скачивает OpenAPI JSON из запущенного сервиса"""
@@ -27,7 +21,6 @@ def download_openapi():
         print(f"❌ Ошибка загрузки OpenAPI: {response.status_code}")
         exit(1)
 
-
 def convert_to_yaml():
     """Конвертирует JSON в YAML"""
     with open(JSON_FILE, "r", encoding="utf-8") as file:
@@ -38,27 +31,7 @@ def convert_to_yaml():
 
     print(f"✅ OpenAPI YAML сохранён в {YAML_FILE}")
 
-
-def update_git_repo():
-    """Клонирует репозиторий, обновляет файлы и отправляет изменения"""
-    if not os.path.exists(GIT_DIR):
-        subprocess.run(["git", "clone", GIT_REPO_URL, GIT_DIR], check=True)
-
-    os.chdir(GIT_DIR)
-    subprocess.run(["git", "pull"], check=True)
-
-    os.replace(f"../{JSON_FILE}", JSON_FILE)
-    os.replace(f"../{YAML_FILE}", YAML_FILE)
-
-    subprocess.run(["git", "add", JSON_FILE, YAML_FILE], check=True)
-    subprocess.run(["git", "commit", "-m", "Автообновление OpenAPI контракта"], check=True)
-    subprocess.run(["git", "push"], check=True)
-
-    print("✅ API-контракт обновлён в репозитории")
-    os.chdir("..")
-
-
 if __name__ == "__main__":
     download_openapi()
     convert_to_yaml()
-    update_git_repo()
+    print("✅ Обновление OpenAPI контракта завершено. Не забудьте закоммитить изменения вручную!")
